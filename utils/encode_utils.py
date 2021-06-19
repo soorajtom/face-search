@@ -2,20 +2,24 @@ import os
 import json
 import time
 import sys
+
+import face_recognition
 from multiprocessing import Pool
 from utils.file_utils import get_images_in_dir_recursive, remove_prefix
 
-def encode_image(f):
-    import face_recognition
-    img = face_recognition.load_image_file(f)
+def encode_image(img):
     img_vector = face_recognition.face_encodings(img, model="cnn")
-    return (f, img_vector)
+    return img_vector
+
+def encode_image_file(f):
+    img = face_recognition.load_image_file(f)
+    return (f, encode_image(img))
 
 def encode_images(img_list, out_file, processes, faces, base_dir):
     skip_list = []
     start = time.time()
     with Pool(processes=processes) as pool:
-        results = pool.map(encode_image, img_list)
+        results = pool.map(encode_image_file, img_list)
     end = time.time()
 
     for (fname, fv) in results:
