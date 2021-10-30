@@ -8,7 +8,7 @@ class File(models.Model):
         Store face image entry. 
     '''
     # Path to the image file.
-    filepath = models.CharField(max_length=255)
+    image = models.ImageField()
     
     # Date of ingestion.
     date_added = models.DateField(default=datetime.date.today)
