@@ -10,4 +10,11 @@ class ImagePathSerializer(serializers.Serializer):
     """
         Serializer for an authenticated message request.
     """
-    image_path = serializers.CharField()
+    path = serializers.CharField()
+
+class ImageBase64Serializer(serializers.Serializer):
+    """
+        Serializer for an authenticated message request.
+    """
+    path = serializers.CharField()
+    base64 = serializers.CharField()
