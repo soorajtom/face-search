@@ -1,3 +1,8 @@
+import os
+import base64
+
+from django.conf import settings
+from django.views.generic import base
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import authentication, permissions, status
@@ -7,7 +12,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from face_utils.serializers import FaceSerializer, ImageBase64Serializer, ImagePathSerializer
+from face_utils.serializers import (FaceSerializer, ImageBase64Serializer,
+                                    ImagePathSerializer)
 
 
 class ListSimilarFaces(APIView):
@@ -81,6 +87,8 @@ class RetrieveImage(APIView):
             serialised_response = ImageBase64Serializer(
                 data={'path': data["path"], 'base64': base64_data})
 
+            print(serialised_response)
+
             if serialised_response.is_valid(raise_exception=True):
                 return Response(serialised_response.data)
 
@@ -88,12 +96,18 @@ class RetrieveImage(APIView):
         '''
             Validate if the image path exists in the base image directory.
         '''
-        return True
+        full_path = os.path.join(settings.IMAGES_DIR, path_data["path"])
+        
+        return os.path.exists(full_path)
 
     def get_base64_string(self, path_data):
         '''
             Convert the image to base64 string.
         '''
-        return "string"
-
-
+        full_path = os.path.join(settings.IMAGES_DIR, path_data["path"])
+        
+        data = ''
+        with open(full_path, "rb") as image_file:
+            data = base64.b64encode(image_file.read())
+            
+        return data
