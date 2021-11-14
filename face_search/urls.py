@@ -20,7 +20,7 @@ from django.urls.conf import include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from face_utils.views import ListSimilarFaces
+from face_utils.views import ListSimilarFaces, RetrieveImage
 from django.contrib.auth.decorators import login_required
 
 schema_view = get_schema_view(
@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     # Face specific views.
     path('face_search', ListSimilarFaces.as_view()),
+    path('retrieve_image', RetrieveImage.as_view()),
 
     # Admin URLs.
     path('admin/', admin.site.urls),
