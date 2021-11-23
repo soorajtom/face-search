@@ -68,7 +68,7 @@ class RetrieveImage(APIView):
         request_body = ImagePathSerializer, 
         responses={400: 'Invalid data',
                    404: 'Requested Image path not found',
-                   200: 'Success'},
+                   200: ImageBase64Serializer},
     )
     def post(self, request, format=None):
         """
@@ -86,8 +86,6 @@ class RetrieveImage(APIView):
             # use the response serialiser to complete the request
             serialised_response = ImageBase64Serializer(
                 data={'path': data["path"], 'base64': base64_data})
-
-            print(serialised_response)
 
             if serialised_response.is_valid(raise_exception=True):
                 return Response(serialised_response.data)
