@@ -108,6 +108,6 @@ class RetrieveImage(APIView):
         
         data = ''
         with open(full_path, "rb") as image_file:
-            data = base64.b64encode(image_file.read())
+            data = base64.b64encode(image_file.read()).decode('utf-8')
             
         return data

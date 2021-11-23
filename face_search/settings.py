@@ -134,6 +134,7 @@ SWAGGER_SETTINGS = {
     "is_superuser": True,
 }
 
+# Authentication Settings.
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -142,3 +143,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     )
 }
+
+# Images base directory.
+IMAGES_DIR = 'lfw/'
