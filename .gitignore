@@ -130,3 +130,5 @@ dmypy.json
 
 # Project Related
 lfw
+config.yaml
+computed_faces.json

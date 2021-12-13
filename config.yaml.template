@@ -1,0 +1,6 @@
+image_dir       : /home/melman/sample/
+output_file     : computed_faces.json
+max_cores       : 4
+no_of_results   : 20
+tolerance       : 0.6
+setup_finished  : true
