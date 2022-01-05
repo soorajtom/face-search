@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './MainContainer.scss';
 import Login from './Login';
 import Search from './Search';
+import { Container, Header } from 'semantic-ui-react';
 
 // const MainContainer = props => (
 // 	<div>This is a component called MainContainer.</div>
@@ -16,14 +17,23 @@ class MainContainer extends React.Component {
 		super(props);
 		this.state = {auth: false};
 	}
+	handleSuccessfulLogin(){
+		this.setState({
+			auth: true
+		  })
+	}
 	render() {
 		if (!this.state.auth){
 			return(
-				<Login />
+				<Container text>
+					<Login handleSuccessfulLogin = {this.handleSuccessfulLogin.bind(this)} />
+				</Container>
 			);
 		} else {
 			return(
-				<Search/>
+				<Container text>
+					<Search/>
+				</Container>
 			);
 		}
 	}
