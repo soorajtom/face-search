@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--skip-file", type=str, help="Skip file", dest="skip_file", required=False)
     parser.add_argument("-p", "--processes", type=int, help="No of processes", dest="processes", default=1)
     parser.add_argument("-f", "--force", help="Overwrite output file", dest="force", action='store_true', default=False)
-    parser.add_argument("-a", "--add-only", help="Add images not encoded already", dest="add_only", action='store_true', default=False)
+    parser.add_argument("-a", "--add-only", help="Add only images not encoded already", dest="add_only", action='store_true', default=False)
     # parser.add_argument("-v", "--verbose", dest="verbose", action='store_true', default=False)
 
     args = parser.parse_args()

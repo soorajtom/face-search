@@ -18,8 +18,11 @@ def encode_image_file(f):
 def encode_images(img_list, out_file, processes, faces, base_dir):
     skip_list = []
     start = time.time()
-    with Pool(processes=processes) as pool:
-        results = pool.map(encode_image_file, img_list)
+    if processes == 1 :
+        results = list(map(encode_image_file, img_list))
+    else:
+        with Pool(processes=processes) as pool:
+            results = pool.map(encode_image_file, img_list)
     end = time.time()
 
     for (fname, fv) in results:

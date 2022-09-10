@@ -1,3 +1,4 @@
 face_recognition
 imutils
 pyyaml
+Django
