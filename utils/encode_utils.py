@@ -5,7 +5,10 @@ import sys
 
 import face_recognition
 from multiprocessing import Pool
-from utils.file_utils import get_images_in_dir_recursive, remove_prefix
+from pathlib import Path
+from utils.file_utils import get_images_in_dir_recursive, remove_prefix, make_thumbnail, get_config
+
+THUMBNAL_PATH = os.path.join(Path(__file__).resolve().parent.parent, "backend", "media", "thumbs")
 
 def encode_image(img):
     img_vector = face_recognition.face_encodings(img, model="cnn")
@@ -13,9 +16,16 @@ def encode_image(img):
 
 def encode_image_file(f):
     img = face_recognition.load_image_file(f)
+    config = get_config()
+    image_dir = config['image_dir']
+    # strip the base directory
+    thumbnal_file_path = remove_prefix(f, image_dir)
+    # strip leading slash
+    thumbnal_file_path = thumbnal_file_path[1:]
+    make_thumbnail(f, os.path.join(THUMBNAL_PATH, ("_".join(thumbnal_file_path.split("_")).replace("/", "_"))))
     return (f, encode_image(img))
 
-def encode_images(img_list, out_file, processes, faces, base_dir):
+def encode_images_and_write(img_list, out_file, processes, faces, base_dir):
     skip_list = []
     start = time.time()
     if processes == 1 :
@@ -42,6 +52,10 @@ def encode_images_from_directory(img_dir, out_file, processes, base_dir=None, fo
     if os.path.exists(out_file) and not force and not add_only:
         raise Exception("Output file already exists. Please remove the file or send -f option.")
 
+    # keep a copy of the old file
+    if not add_only and os.path.exists(out_file):
+        os.rename(out_file, out_file+".bak")
+
     base_dir = base_dir if base_dir is not None else img_dir
     skip_list_set = set()
     if skip_file is None:
@@ -61,7 +75,7 @@ def encode_images_from_directory(img_dir, out_file, processes, base_dir=None, fo
     print("Collected %s images." % len(image_paths))
 
     start = time.time()
-    new_skip_list = encode_images(image_paths, out_file, processes, faces, base_dir)
+    new_skip_list = encode_images_and_write(image_paths, out_file, processes, faces, base_dir)
     end = time.time()
 
     with open(skip_file, "w") as fp:

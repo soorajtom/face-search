@@ -13,11 +13,17 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import json
 from pathlib import Path
 import os
-from utils.search_utils import get_config
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# Add the project root to the Python path
+sys.path.insert(0, str(BASE_DIR))
+
+print(BASE_DIR)
+
+from utils.search_utils import get_config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -126,10 +132,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'backend', 'media')
 MEDIA_URL = '/media/'
 
-FACE_CONFIG = get_config("%s/../config.yaml" % BASE_DIR)
+FACE_CONFIG = get_config("%s/config.yaml" % BASE_DIR)
 LABELLED_FACES = {}
-with open("%s/../%s" % (BASE_DIR, FACE_CONFIG['output_file'])) as fp:
+with open("%s/%s" % (BASE_DIR, FACE_CONFIG['output_file'])) as fp:
     LABELLED_FACES = json.load(fp)

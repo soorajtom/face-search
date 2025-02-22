@@ -1,14 +1,7 @@
-from PIL import Image
 import json
 from multiprocessing import Pool
 import os
-
-def make_thumbnail(src, dest):
-    if os.path.exists(dest):
-        return
-    img = Image.open(src)
-    img.thumbnail((200,200))
-    img.save(dest)
+from  utils import make_thumbnail
 
 def handle(src_dir, dest_dir):
     with open("../studio_slash.json") as fp:

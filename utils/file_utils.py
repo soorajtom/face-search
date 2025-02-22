@@ -1,7 +1,11 @@
 import os
 import yaml
 
+from PIL import Image
+
 is_image = lambda x: x.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif'))
+
+config = None
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
@@ -9,8 +13,11 @@ def remove_prefix(text, prefix):
     return text
 
 def get_config(config_file="config.yaml"):
+    global config
+    if config is not None:
+        return config
     with open(config_file) as fp:
-        config = yaml.load(fp)
+        config = yaml.load(fp, Loader=yaml.FullLoader)
     return config
 
 def key_to_filepath(key, image_dir):
@@ -45,6 +52,13 @@ def underscored_to_slash(key, base_dir):
             return False, "_".join([local_path, face_index])
     print(key, path)
     return True, ""
+
+def make_thumbnail(src, dest):
+    if os.path.exists(dest):
+        return
+    img = Image.open(src)
+    img.thumbnail((480,480))
+    img.save(dest)
 
 
 """

@@ -9,6 +9,7 @@ from .models import Search
 from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 from utils.search_utils import search_one_face_from_file
+from utils.encode_utils import THUMBNAL_PATH
 
 def index(request):
     return redirect('search')
@@ -24,7 +25,8 @@ def search(request):
         if form.is_valid():
             search_entry = form.save()
             search_entry.uuid = uuid4()
-            search_entry.user = request.user
+            if request.user.is_authenticated:
+                search_entry.user = request.user
             res = search_one_face_from_file(search_entry.search_img.path, settings.FACE_CONFIG['tolerance'], settings.LABELLED_FACES)
             search_entry.results = res[:50]
             search_entry.save()
@@ -32,7 +34,7 @@ def search(request):
             print(res)
             return redirect('/results/%s/' % search_entry.uuid)
     else:
-        recent = Search.objects.all().order_by("-timestamp")[:10]
+        recent = Search.objects.all().order_by("-timestamp")[:0]
         form = SearchForm()
     return render(request, 'search.html', {'form' : form, "recent": recent})
 
@@ -41,8 +43,8 @@ def results(request, token):
     search_entry = Search.objects.get(uuid=token)
     results = [{
         "path": os.path.join("/media/thumbs", ("_".join(x.split("_")[:-1]).replace("/", "_"))),
-        "date": x.split("/")[-2],
-        "name": x.split("/")[-1]
+        "directory": x.split("/")[-2],
+        "name": "_".join((x.split("/")[-1]).split("_")[:-1]),
         } for x in search_entry.results]
     return render(request, 'results.html', {'search' : search_entry, "config": settings.FACE_CONFIG, "results": results})
 
